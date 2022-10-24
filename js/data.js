@@ -63,4 +63,3 @@ const createObjects = (count = 25) => {
 };
 
 export {createObjects};
-export {createObject};

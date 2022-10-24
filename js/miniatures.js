@@ -2,9 +2,9 @@ const pictures = document.querySelector('.pictures');
 const templateMiniatures = document.querySelector('#picture').content;
 const similarListMiniature = document.createDocumentFragment();
 
-const createMiniatures = (createdObject) => {
-  createdObject.forEach((({url, likes, comments}) => {
-    const commentsLength = comments.length + 1;
+const createMiniatures = (photoObjects) => {
+  photoObjects.forEach((({url, likes, comments}) => {
+    const commentsLength = comments.length;
 
     const miniature = templateMiniatures.cloneNode(true);
     miniature.querySelector('.picture__img').src = url;
