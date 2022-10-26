@@ -13,4 +13,7 @@ const checkMaxStringLength = (string, maxLength) => string.length <= maxLength;
 
 checkMaxStringLength('строка', 5);
 
+/* // Функция проверки нажатия клавиши Esc
+const isEscapeKey = (evt) => evt.key === 'Escape'; */
+
 export {getRandomNumber};

@@ -42,16 +42,13 @@ const createComments = (count = 6) => {
 };
 
 // Функция для создания объекта массива — описание фотографии, опубликованной пользователем
-const createObject = (index) => {
-  const object = {
-    id: index,
-    url: `photos/${index}.jpg`,
-    description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
-    likes: getRandomNumber(15, 200),
-    comments: createComments()
-  };
-  return object;
-};
+const createObject = (index) => ({
+  id: index,
+  url: `photos/${index}.jpg`,
+  description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
+  likes: getRandomNumber(15, 200),
+  comments: createComments()
+});
 
 // функции для создания массива из 25 сгенерированных объектов
 const createObjects = (count = 25) => {
