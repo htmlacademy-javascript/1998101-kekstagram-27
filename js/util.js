@@ -16,4 +16,11 @@ checkMaxStringLength('строка', 5);
 /* // Функция проверки нажатия клавиши Esc
 const isEscapeKey = (evt) => evt.key === 'Escape'; */
 
-export {getRandomNumber};
+//Функция
+const countSameValue = (array, value) => {
+  let count = 0;
+  array.forEach((element) => (element === value && count++));
+  return count;
+};
+
+export {getRandomNumber, countSameValue};
