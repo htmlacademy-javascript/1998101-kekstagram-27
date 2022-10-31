@@ -21,7 +21,7 @@ const pristine = new Pristine(form, {
   errorTextClass: 'form__error'
 });
 
-// Валидация по формату хешьега
+// Валидация по формату хештега
 pristine.addValidator(hashtagField, (value) => {
   if (value.length === 0) {
     return true;
