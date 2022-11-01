@@ -23,4 +23,4 @@ const countSameValue = (array, value) => {
   return count;
 };
 
-export {getRandomNumber, countSameValue};
+export {getRandomNumber, countSameValue, checkMaxStringLength};
