@@ -1,8 +1,7 @@
 import {checkMaxStringLength, countSameValue} from './util.js';
 
-// Закрытие формы
-const closeForm = document.querySelector('.img-upload__overlay');
-/* const cancel = document.querySelector('#upload-cancel'); */
+const closeFormElement = document.querySelector('.img-upload__overlay');
+const body = document.body;
 
 const uploadPhoto = () => {
   const form = document.querySelector('.img-upload__form');
@@ -57,14 +56,22 @@ const uploadPhoto = () => {
     checkMaxStringLength(comment, MAX_DESCRIPTION_LENGTH);
   }, 'Длина комментария не может быть больше 140 символов.');
 
-  const openForm = () => {
-    document.querySelector('.img-upload__overlay').classList.remove('hidden');
-    document.querySelector('.img-upload__cancel').addEventListener('click');
+  const closeForm = (evt) => {
+    if (evt.target.parentNode.classList.contains('img-upload__wrapper')) {
+      return;
+    }
+    document.querySelector('.img-upload__overlay').classList.add('hidden');
+    document.querySelector('.img-upload__cancel').removeEventListener('click', closeForm);
+    body.classList.remove('modal-open');
   };
 
-  // После открытия окна тегу <body> добавляется класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле.
-  const body = document.body;
-  body.classList.add('modal-open');
+  const openForm = () => {
+    document.querySelector('.img-upload__overlay').classList.remove('hidden');
+    document.querySelector('.img-upload__cancel').addEventListener('click', closeForm);
+    body.classList.add('modal-open');
+
+    closeFormElement.addEventListener('click', closeForm);
+  };
 
   form.addEventListener('change', openForm);
 
@@ -75,18 +82,11 @@ const uploadPhoto = () => {
   });
 };
 
-// закрытие формы
-closeForm.addEventListener('click', () => {
-  closeForm.classList.add('hidden');
-  const body = document.body;
-  body.classList.remove('modal-open');
-});
-
 // Обработчик нажатия Esc
 document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
-    closeForm.classList.add('hidden');
+    closeFormElement.classList.add('hidden');
   }
 });
 
