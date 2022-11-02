@@ -1,15 +1,15 @@
-import {checkMaxStringLength, countSameValue} from './util.js';
+import {countSameValue} from './util.js';
 
 const closeFormElement = document.querySelector('.img-upload__overlay');
 const body = document.body;
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_DESCRIPTION_LENGTH = 140;
 
-const uploadPhoto = () => {
+const showFormWithValidation = () => {
   const form = document.querySelector('.img-upload__form');
-  const hashtagField = form.querySelector('.text__hashtags');
+  const hashTagField = form.querySelector('.text__hashtags');
   const descriptionField = form.querySelector('.text__description');
-  const MAX_HASHTAG_COUNT = 5;
-  const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-  const MAX_DESCRIPTION_LENGTH = 140;
 
   const getHashTags = (value) => value.trim().split(' ');
 
@@ -23,7 +23,7 @@ const uploadPhoto = () => {
   }, true);
 
   // Валидация по формату хештега
-  pristine.addValidator(hashtagField, (value) => {
+  pristine.addValidator(hashTagField, (value) => {
     if (value.length === 0) {
       return true;
     }
@@ -33,13 +33,13 @@ const uploadPhoto = () => {
   }, 'Неверный формат хэштегов.');
 
   // Валидация по количеству хештегов
-  pristine.addValidator(hashtagField, (value) => {
+  pristine.addValidator(hashTagField, (value) => {
     const hashtags = getHashTags(value);
     return hashtags.length <= MAX_HASHTAG_COUNT;
   }, `нельзя добавлять больше ${MAX_HASHTAG_COUNT} хэштегов.`);
 
   // Валидация на повторение хештегов
-  pristine.addValidator(hashtagField, (value) => {
+  pristine.addValidator(hashTagField, (value) => {
     const hashtags = getHashTags(value);
     const isValidHashtags = hashtags.every((hashtag) => {
       const isUniqueHashtag = countSameValue(hashtags, hashtag) === 1;
@@ -50,11 +50,10 @@ const uploadPhoto = () => {
 
   // Валидация по длине комментария
   pristine.addValidator(descriptionField, (comment) => {
-    if (comment.length <= 140) {
+    if (comment.length <= MAX_DESCRIPTION_LENGTH) {
       return true;
     }
-    checkMaxStringLength(comment, MAX_DESCRIPTION_LENGTH);
-  }, 'Длина комментария не может быть больше 140 символов.');
+  }, `Длина комментария не может быть больше ${MAX_DESCRIPTION_LENGTH} символов.`);
 
   const closeForm = (evt) => {
     if (evt.target.parentNode.classList.contains('img-upload__wrapper')) {
@@ -70,14 +69,15 @@ const uploadPhoto = () => {
     document.querySelector('.img-upload__cancel').addEventListener('click', closeForm);
     body.classList.add('modal-open');
 
-    closeFormElement.addEventListener('click', closeForm);
+    /* closeFormElement.addEventListener('click', closeForm); */
   };
 
   form.addEventListener('change', openForm);
 
   form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    pristine.validate();
+    if(!pristine.validate()){
+      evt.preventDefault();
+    }
     evt.target.reset();
   });
 };
@@ -90,4 +90,4 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
-export {uploadPhoto};
+export {showFormWithValidation};
