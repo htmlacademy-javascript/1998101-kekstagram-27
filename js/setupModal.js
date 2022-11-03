@@ -7,33 +7,43 @@ const closeModal = bigPicture.querySelector('.big-picture__cancel');
 // Открытие модального окна
 const showModal = (url, likes, comments, description) => {
   bigPicture.classList.remove('hidden');
-  const commentsContainer = document.createDocumentFragment();
   const socialComments = bigPicture.querySelector('.social__comments');
   socialComments.innerHTML = '';
 
   // После открытия окна тегу <body> добавляется класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле.
   const body = document.body;
   body.classList.add('modal-open');
+  bigPicture.querySelector('.comments-count').textContent = comments.length;
 
-  // После открытия окна прячем блоки счётчика комментариев и загрузки новых комментариев
-  const socialCommentCount = bigPicture.querySelector('.social__comment-count');
-  socialCommentCount.classList.add('hidden');
-  const commentsLoader = bigPicture.querySelector('.comments-loader');
-  commentsLoader.classList.add('hidden');
+  const renderComments = (commentsArr) => {
+    const commentsContainer = document.createDocumentFragment();
 
-  comments.forEach(({avatar, message, name}) => {
-    const comment = templateComment.cloneNode(true);
-    comment.querySelector('.social__picture').src = avatar;
-    comment.querySelector('.social__text').textContent = message;
-    comment.querySelector('.social__picture').alt = name;
-    commentsContainer.appendChild(comment);
-  });
+    commentsArr.forEach(({avatar, message, name}) => {
+      const comment = templateComment.cloneNode(true);
+      comment.querySelector('.social__picture').src = avatar;
+      comment.querySelector('.social__text').textContent = message;
+      comment.querySelector('.social__picture').alt = name;
+      commentsContainer.appendChild(comment);
+    });
+    socialComments.appendChild(commentsContainer);
+  };
 
-  socialComments.appendChild(commentsContainer);
+  const checkCommetnsQuantity = () => comments.length > 5;
+
+  if (checkCommetnsQuantity()) {
+    const commentsToShow = comments.splice(0, 5);
+    renderComments(commentsToShow);
+    document.querySelector('.social__comments-loader').addEventListener('click', () => {
+      const commentsArr = comments.splice(0, 5);
+      renderComments(commentsArr);
+    });
+  } else {
+    document.querySelector('.social__comments-loader').classList.add('hidden');
+    renderComments(comments);
+  }
 
   bigPicture.querySelector('.big-picture__img img').src = url;
-  bigPicture.querySelector('.social__likes').textContent = likes;
-  bigPicture.querySelector('.comments-count').textContent = comments;
+  bigPicture.querySelector('.likes-count').textContent = likes;
   bigPicture.querySelector('.social__caption').textContent = description;
 };
 
