@@ -90,4 +90,59 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
+// Код, который позволяет пользователю редактировать масштаб изображения.
+const scaleControlSmaller = document.querySelector('.scale__control--smaller');
+const scaleControlBigger = document.querySelector('.scale__control--bigger');
+scaleControlBigger.disabled = true;
+const scaleControlValue = document.querySelector('.scale__control--value');
+const uploadPhoto = document.querySelector('.img-upload__preview');
+let scaleControlDefaultValue = 100;
+const scaleStep = 25;
+const scaleMin = 25;
+const scaleMax = 100;
+const transformStep = 0.25;
+let transformStartValue = 1;
+
+scaleControlValue.value = `${scaleControlDefaultValue}%`;
+
+// Уменьшение масштаба
+const makePhotoSmaller = (evt) => {
+  evt.preventDefault();
+  scaleControlDefaultValue -= scaleStep;
+  scaleControlValue.value = `${scaleControlDefaultValue}%`;
+
+  transformStartValue -= transformStep;
+  const transformScale = `scale(${ transformStartValue })`;
+  uploadPhoto.style.transform = transformScale;
+
+  scaleControlBigger.disabled = false;
+
+  if(scaleControlDefaultValue <= scaleMin){
+    scaleControlSmaller.disabled = true;
+  }
+};
+
+// увеличение масштаба
+const makePhotoBigger = (evt) => {
+  evt.preventDefault();
+  scaleControlDefaultValue += scaleStep;
+  scaleControlValue.value = `${scaleControlDefaultValue}%`;
+
+  transformStartValue += transformStep;
+  const transformScale = `scale(${ transformStartValue })`;
+  uploadPhoto.style.transform = transformScale;
+
+  scaleControlSmaller.disabled = false;
+
+  if(scaleControlDefaultValue >= scaleMax){
+    scaleControlBigger.disabled = true;
+  }
+};
+
+scaleControlSmaller.addEventListener('click', makePhotoSmaller);
+scaleControlBigger.addEventListener('click', makePhotoBigger);
+
+// Фильтры
+
+
 export {showFormWithValidation};
