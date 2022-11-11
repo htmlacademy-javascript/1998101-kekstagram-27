@@ -84,7 +84,7 @@ const showFormWithValidation = () => {
 
 // Обработчик нажатия Esc
 document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
     evt.preventDefault();
     closeFormElement.classList.add('hidden');
   }
