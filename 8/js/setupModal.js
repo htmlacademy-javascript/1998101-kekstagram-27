@@ -2,18 +2,17 @@ import './miniatures.js';
 
 const bigPicture = document.querySelector('.big-picture');
 const templateComment = document.querySelector('#comment').content;
-const closeModal = bigPicture.querySelector('.big-picture__cancel');
+const closeModalButton = bigPicture.querySelector('.big-picture__cancel');
+const loadMoreButton = document.querySelector('.social__comments-loader');
+const socialComments = bigPicture.querySelector('.social__comments');
+const commentsCount = bigPicture.querySelector('.comments-count');
+const body = document.body;
 
-// Открытие модального окна
-const showModal = (url, likes, comments, description) => {
-  bigPicture.classList.remove('hidden');
-  const socialComments = bigPicture.querySelector('.social__comments');
-  socialComments.innerHTML = '';
+const setupComments = (comments) => {
+  let count = 5;
+  const visibleComments = [];
 
-  // После открытия окна тегу <body> добавляется класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле.
-  const body = document.body;
-  body.classList.add('modal-open');
-  bigPicture.querySelector('.comments-count').textContent = comments.length;
+  const checkCommentsQuantity = () => comments.length > 5;
 
   const renderComments = (commentsArr) => {
     const commentsContainer = document.createDocumentFragment();
@@ -27,40 +26,55 @@ const showModal = (url, likes, comments, description) => {
     });
     socialComments.appendChild(commentsContainer);
   };
-
-  const checkCommetnsQuantity = () => comments.length > 5;
-
-  if (checkCommetnsQuantity()) {
-    const commentsToShow = comments.splice(0, 5);
+  if (checkCommentsQuantity(comments)) {
+    loadMoreButton.classList.remove('hidden');
+    const commentsToShow = comments.slice(0, 5);
+    visibleComments.push(...commentsToShow);
     renderComments(commentsToShow);
-    document.querySelector('.social__comments-loader').addEventListener('click', () => {
-      const commentsArr = comments.splice(0, 5);
+    loadMoreButton.addEventListener('click', () => {
+      const commentsArr = comments.slice(count, count + 5);
+      count += 5;
       renderComments(commentsArr);
+      visibleComments.push(...commentsArr);
+      if (comments.length === visibleComments.length) {
+        loadMoreButton.classList.add('hidden');
+      }
     });
   } else {
     document.querySelector('.social__comments-loader').classList.add('hidden');
     renderComments(comments);
   }
-
-  bigPicture.querySelector('.big-picture__img img').src = url;
-  bigPicture.querySelector('.likes-count').textContent = likes;
-  bigPicture.querySelector('.social__caption').textContent = description;
 };
 
 // Закрытие модального окна
-closeModal.addEventListener('click', () => {
+const closeModal = () => {
   bigPicture.classList.add('hidden');
-
-  const body = document.body;
   body.classList.remove('modal-open');
-});
+  closeModalButton.removeEventListener('click', closeModal);
+};
 
-// Обработчик нажатия Esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    bigPicture.classList.add('hidden');
-  }
-});
+// Открытие модального окна
+const showModal = () => {
+  bigPicture.classList.remove('hidden');
+  body.classList.add('modal-open');
+  closeModalButton.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      bigPicture.classList.add('hidden');
+    }
+  });
+};
 
-export{showModal};
+const setupModal = (url, likes, comments, description) => {
+  socialComments.innerHTML = '';
+  commentsCount.textContent = comments.length;
+  bigPicture.querySelector('.big-picture__img img').src = url;
+  bigPicture.querySelector('.likes-count').textContent = likes;
+  bigPicture.querySelector('.social__caption').textContent = description;
+  setupComments(comments);
+
+  showModal();
+};
+
+export{setupModal};
