@@ -39,10 +39,18 @@ const setupComments = (comments) => {
       if (comments.length === visibleComments.length) {
         loadMoreButton.classList.add('hidden');
       }
-    });
+    }, { once: true });
   } else {
-    document.querySelector('.social__comments-loader').classList.add('hidden');
+    loadMoreButton.classList.add('hidden');
     renderComments(comments);
+  }
+};
+
+//Функция закрытия окна по Escape
+const onEscapeKeydown = (evt) => {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    bigPicture.classList.add('hidden');
   }
 };
 
@@ -51,6 +59,7 @@ const closeModal = () => {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
   closeModalButton.removeEventListener('click', closeModal);
+  document.removeEventListener('keydown', onEscapeKeydown);
 };
 
 // Открытие модального окна
@@ -58,12 +67,7 @@ const showModal = () => {
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
   closeModalButton.addEventListener('click', closeModal);
-  document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      bigPicture.classList.add('hidden');
-    }
-  });
+  document.addEventListener('keydown', onEscapeKeydown);
 };
 
 const setupModal = (url, likes, comments, description) => {
