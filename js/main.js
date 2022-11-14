@@ -3,11 +3,11 @@ import {createMiniatures} from './miniatures.js';
 import {setupModal} from './setupModal.js';
 import {showFormWithValidation} from './form.js';
 import {initScale} from './scaleImages.js';
-// import {initFilters} from './effectsImages.js';
+import {initFilters} from './effectsImages.js';
 
 
 initScale();
-// initFilters();
+initFilters();
 showFormWithValidation();
 
 const pictures = createObjects(25);
