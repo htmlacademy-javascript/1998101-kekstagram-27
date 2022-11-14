@@ -1,23 +1,26 @@
-const effectSliderContainer = document.querySelector('.img-upload__effect-level');
+const effectSliderContainer = document.querySelector('div.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const uploadPhoto = document.querySelector('.img-upload__preview');
-let effectCurrentClass;
 const effectOriginal = document.querySelector('#effect-none');
 const effectChrome = document.querySelector('#effect-chrome');
 const effectSepia = document.querySelector('#effect-sepia');
 const effectMarvin = document.querySelector('#effect-marvin');
 const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
-let isSliderInitialized = false;
+const effectLevel = document.querySelector('fieldset.img-upload__effect-level');
 
 const initFilters = () => {
+  let effectCurrentClass;
+  let isSliderInitialized = false;
 
   // По умолчанию выбран эффект «Оригинал».
-  effectOriginal.addEventListener('change', () => {
-    if (effectOriginal.checked) {
+  effectOriginal.addEventListener('change', (evt) => {
+    if (evt.target.checked) {
       uploadPhoto.classList.remove(effectCurrentClass);
       uploadPhoto.style.filter = '';
+
       if (isSliderInitialized) {
+        effectLevel.classList.add('hidden');
         effectSliderContainer.noUiSlider.destroy();
         isSliderInitialized = false;
       }
@@ -51,6 +54,7 @@ const initFilters = () => {
   effectChrome.addEventListener('change', (evt) => {
     if (evt.target.checked) {
       activateFilter('effects__preview--chrome', (currentValue) => `greyscale(${currentValue})`);
+      effectLevel.classList.remove('hidden');
 
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
