@@ -29,6 +29,7 @@ const initFilters = () => {
 
   const activateFilter = (filterEffectClass, getFilterStyle) => {
     if (!isSliderInitialized) {
+      effectLevel.classList.remove('hidden');
       noUiSlider.create(effectSliderContainer, {
         range: {
           min: 0,
@@ -53,8 +54,7 @@ const initFilters = () => {
   // Эффект «Хром»
   effectChrome.addEventListener('change', (evt) => {
     if (evt.target.checked) {
-      activateFilter('effects__preview--chrome', (currentValue) => `greyscale(${currentValue})`);
-      effectLevel.classList.remove('hidden');
+      activateFilter('effects__preview--chrome', (currentValue) => `grayscale(${currentValue})`);
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -70,7 +70,6 @@ const initFilters = () => {
   effectSepia.addEventListener('change', (evt) => {
     if (evt.target.checked) {
       activateFilter('effects__preview--sepia', (currentValue) => `sepia(${currentValue})`);
-      effectLevel.classList.remove('hidden');
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -86,7 +85,6 @@ const initFilters = () => {
   effectMarvin.addEventListener('change', (evt) => {
     if (evt.target.checked) {
       activateFilter('effects__preview--marvin', (currentValue) => `invert(${currentValue}%)`);
-      effectLevel.classList.remove('hidden');
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -102,7 +100,6 @@ const initFilters = () => {
   effectPhobos.addEventListener('change', (evt) => {
     if (evt.target.checked) {
       activateFilter('effects__preview--phobos', (currentValue) => `blur(${currentValue}px)`);
-      effectLevel.classList.remove('hidden');
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
           min: 0,
@@ -118,7 +115,6 @@ const initFilters = () => {
   effectHeat.addEventListener('change', (evt) => {
     if (evt.target.checked) {
       activateFilter('effects__preview--heat', (currentValue) => `brightness(${currentValue})`);
-      effectLevel.classList.remove('hidden');
       effectSliderContainer.noUiSlider.updateOptions({
         range: {
           min: 1,
