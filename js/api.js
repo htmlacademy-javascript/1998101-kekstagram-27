@@ -1,6 +1,7 @@
 const GET_DATA_URL = 'https://27.javascript.pages.academy/kekstagram/data';
 const SEND_DATA_URL = 'https://27.javascript.pages.academy/kekstagram';
 
+
 const getData = (onSuccess, onFail) => {
   fetch(GET_DATA_URL)
     .then((response) => response.json())
