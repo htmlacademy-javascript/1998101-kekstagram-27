@@ -1,4 +1,3 @@
-import {createObjects} from './data.js';
 import {createMiniatures} from './miniatures.js';
 import {setupModal} from './setupModal.js';
 import {showFormWithValidation} from './form.js';
@@ -12,13 +11,8 @@ initScale();
 initFilters();
 showFormWithValidation();
 
-const pictures = createObjects(25);
-createMiniatures(pictures, setupModal);
-
-getData(
-  () => {
-    //
-  },
+getData((data) => {createMiniatures(data, setupModal);}
+,
   () => {
     showAlert('Не удалось загрузить изображения. Попробуйте перезагрузить страницу');
   }
