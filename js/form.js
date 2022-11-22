@@ -3,6 +3,7 @@ import {sendData} from './api.js';
 
 const closeFormElement = document.querySelector('.img-upload__overlay');
 const form = document.querySelector('.img-upload__form');
+const uploadPreview = document.querySelector('.img-upload__preview');
 const formInputs = form.querySelectorAll('input, textarea');
 const submitButton = form.querySelector('button[type="submit"]');
 const successModal = document.querySelector('.success');
@@ -94,11 +95,14 @@ document.addEventListener('keydown', (evt) => {
   }
 });
 
-//вызывать функцию по клику на кнопку отмены отпраки.
+//вызывать функцию по клику на кнопку отмены отправки.
 // Закрытие окна успешного сообщения
 const closeSuccessMessage = () => {
   successModal.classList.add('hidden');
+  closeFormElement.classList.add('hidden');
   body.classList.remove('modal-open');
+  document.querySelector('.img-upload__preview').classList.remove();
+  uploadPreview.className = 'img-upload__preview';
 };
 
 const clearForm = () => {
@@ -135,6 +139,7 @@ const showSuccessMessage = () => {
 // Закрытие окна сообщения с ошибкой
 const closeErrorMessage = () => {
   errorModal.classList.add('hidden');
+  closeFormElement.classList.add('hidden');
   body.classList.remove('modal-open');
 };
 
