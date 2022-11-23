@@ -15,9 +15,6 @@ const checkMaxStringLength = (string, maxLength) => string.length <= maxLength;
 
 checkMaxStringLength('строка', 5);
 
-/* // Функция проверки нажатия клавиши Esc
-const isEscapeKey = (evt) => evt.key === 'Escape'; */
-
 //Функция
 const countSameValue = (array, value) => {
   let count = 0;
