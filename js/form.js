@@ -1,26 +1,38 @@
 import {countSameValue} from './util.js';
+import {sendData} from './api.js';
 
 const closeFormElement = document.querySelector('.img-upload__overlay');
+const form = document.querySelector('.img-upload__form');
+const uploadPreview = document.querySelector('.img-upload__preview');
+const formInputs = form.querySelectorAll('input, textarea');
+const submitButton = form.querySelector('button[type="submit"]');
+const successModal = document.querySelector('.success');
+const successButton = document.querySelector('.success__button');
+const errorModal = document.querySelector('.error');
+const errorButton = document.querySelector('.error__button');
+const scaleControl = form.querySelector('.scale__control--value');
+const effectNone = document.querySelector('#effect-none');
+const range = document.querySelector('.effect-level');
+
 const body = document.body;
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_DESCRIPTION_LENGTH = 140;
 
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper',
+  errorClass: 'field-error',
+  successClass: 'field-success',
+  errorTextParent: 'img-upload__field-wrapper',
+  errorTextTag: 'p',
+  errorTextClass: 'form__error'
+}, true);
+
 const showFormWithValidation = () => {
-  const form = document.querySelector('.img-upload__form');
   const hashTagField = form.querySelector('.text__hashtags');
   const descriptionField = form.querySelector('.text__description');
 
   const getHashTags = (value) => value.trim().split(' ');
-
-  const pristine = new Pristine(form, {
-    classTo: 'img-upload__field-wrapper',
-    errorClass: 'field-error',
-    successClass: 'field-success',
-    errorTextParent: 'img-upload__field-wrapper',
-    errorTextTag: 'p',
-    errorTextClass: 'form__error'
-  }, true);
 
   // Валидация по формату хештега
   pristine.addValidator(hashTagField, (value) => {
@@ -68,18 +80,9 @@ const showFormWithValidation = () => {
     document.querySelector('.img-upload__overlay').classList.remove('hidden');
     document.querySelector('.img-upload__cancel').addEventListener('click', closeForm);
     body.classList.add('modal-open');
-
-    /* closeFormElement.addEventListener('click', closeForm); */
   };
 
   form.addEventListener('change', openForm);
-
-  form.addEventListener('submit', (evt) => {
-    if(!pristine.validate()){
-      evt.preventDefault();
-    }
-    evt.target.reset();
-  });
 };
 
 // Обработчик нажатия Esc
@@ -87,6 +90,80 @@ document.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape' || evt.key === 'Esc') {
     evt.preventDefault();
     closeFormElement.classList.add('hidden');
+  }
+});
+
+// Закрытие окна успешного сообщения
+const closeSuccessMessage = () => {
+  successModal.classList.add('hidden');
+  closeFormElement.classList.add('hidden');
+  body.classList.remove('modal-open');
+};
+
+const clearForm = () => {
+  formInputs.forEach(input => {
+    input.value = '';
+  });
+  uploadPreview.className = 'img-upload__preview';
+  uploadPreview.style.filter = '';
+  uploadPreview.style.transform = 'scale(1)';
+  scaleControl.value = '100%';
+  effectNone.checked = true;
+  range.classList.add('hidden');
+  window.isSliderInitialized = false;
+  closeSuccessMessage();
+};
+
+const showSuccessMessage = () => {
+  submitButton.disabled = false;
+  clearForm();
+  successModal.classList.remove('hidden');
+  body.classList.add('modal-open');
+
+  // обработчик на кнопку закрытия и на esc
+  successButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    closeSuccessMessage();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      closeSuccessMessage();
+    }
+  });
+};
+
+// Закрытие окна сообщения с ошибкой
+const closeErrorMessage = () => {
+  errorModal.classList.add('hidden');
+};
+
+// Окно с ошибкой
+const showErrorMessage = () => {
+  submitButton.disabled = false;
+  errorModal.classList.remove('hidden');
+  body.classList.add('modal-open');
+
+  // обработчик на кнопку закрытия и на esc
+  errorButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    closeErrorMessage();
+  });
+
+  document.addEventListener('keydown', (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      closeErrorMessage();
+    }
+  });
+};
+
+submitButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+
+  if (pristine.validate()) {
+    const formData = new FormData(form);
+    submitButton.disabled = true;
+    sendData(showSuccessMessage, showErrorMessage, formData);
   }
 });
 

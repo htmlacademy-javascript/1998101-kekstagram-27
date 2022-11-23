@@ -51,7 +51,6 @@ const initScale = () => {
 
   scaleControlSmaller.addEventListener('click', makePhotoSmaller);
   scaleControlBigger.addEventListener('click', makePhotoBigger);
-
 };
 
 export {initScale};

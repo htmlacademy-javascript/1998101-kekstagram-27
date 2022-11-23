@@ -11,7 +11,8 @@ const effectLevel = document.querySelector('fieldset.img-upload__effect-level');
 
 const initFilters = () => {
   let effectCurrentClass;
-  let isSliderInitialized = false;
+  const isSliderInitialized = false;
+  window.isSliderInitialized = isSliderInitialized;
 
   // По умолчанию выбран эффект «Оригинал».
   effectOriginal.addEventListener('change', (evt) => {
@@ -22,13 +23,13 @@ const initFilters = () => {
       if (isSliderInitialized) {
         effectLevel.classList.add('hidden');
         effectSliderContainer.noUiSlider.destroy();
-        isSliderInitialized = false;
+        window.isSliderInitialized = false;
       }
     }
   });
 
   const activateFilter = (filterEffectClass, getFilterStyle) => {
-    if (!isSliderInitialized) {
+    if (!window.isSliderInitialized) {
       effectLevel.classList.remove('hidden');
       noUiSlider.create(effectSliderContainer, {
         range: {
@@ -39,7 +40,7 @@ const initFilters = () => {
         step: 0.01,
         connect: 'lower',
       });
-      isSliderInitialized = true;
+      window.isSliderInitialized = true;
     }
     uploadPhoto.classList.remove(effectCurrentClass);
     effectSliderContainer.noUiSlider.off();
