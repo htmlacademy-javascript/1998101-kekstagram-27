@@ -101,7 +101,7 @@ const closeSuccessMessage = () => {
 };
 
 const clearForm = () => {
-  formInputs.forEach(input => {
+  formInputs.forEach((input) => {
     input.value = '';
   });
   uploadPreview.className = 'img-upload__preview';
