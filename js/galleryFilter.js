@@ -59,7 +59,6 @@ const showInitialPosts = (posts) => {
   returnedFunction();
 };
 
-
 const initGalleryFilter = (data) => {
   const initialPosts = data;
 
@@ -83,11 +82,9 @@ const initGalleryFilter = (data) => {
     } else if (currentFilter === 'filter-random') {
       showRandomPosts(initialPosts);
     } else {
-      showInitialPosts(initialPosts)
+      showInitialPosts(initialPosts);
     }
   });
 };
 
 export {initGalleryFilter};
-
-
