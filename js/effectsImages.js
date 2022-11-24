@@ -9,6 +9,14 @@ const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
 const effectLevel = document.querySelector('fieldset.img-upload__effect-level');
 
+const destroySlider = () => {
+  effectLevel.classList.add('hidden');
+  effectSliderContainer.noUiSlider.destroy();
+  window.isSliderInitialized = false;
+};
+
+window.destroySlider = destroySlider;
+
 const initFilters = () => {
   let effectCurrentClass;
   const isSliderInitialized = false;
@@ -19,12 +27,6 @@ const initFilters = () => {
     if (evt.target.checked) {
       uploadPhoto.classList.remove(effectCurrentClass);
       uploadPhoto.style.filter = '';
-
-      if (isSliderInitialized) {
-        effectLevel.classList.add('hidden');
-        effectSliderContainer.noUiSlider.destroy();
-        window.isSliderInitialized = false;
-      }
     }
   });
 

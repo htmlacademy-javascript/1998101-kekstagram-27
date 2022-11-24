@@ -113,6 +113,7 @@ const clearForm = () => {
   effectNone.checked = true;
   range.classList.add('hidden');
   window.isSliderInitialized = false;
+  window.destroySlider();
   closeSuccessMessage();
 };
 

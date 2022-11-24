@@ -53,4 +53,6 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-export {getRandomNumber, countSameValue, checkMaxStringLength, showAlert, debounce};
+const getRandomElement = (array) => array[getRandomNumber(0, array.length - 1)];
+
+export {getRandomNumber, countSameValue, checkMaxStringLength, showAlert, debounce, getRandomElement};
