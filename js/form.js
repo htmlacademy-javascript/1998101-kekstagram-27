@@ -1,5 +1,6 @@
 import {countSameValue} from './util.js';
 import {sendData} from './api.js';
+import {imageUpload} from './imageUpload.js';
 
 const closeFormElement = document.querySelector('.img-upload__overlay');
 const form = document.querySelector('.img-upload__form');
@@ -13,6 +14,7 @@ const errorButton = document.querySelector('.error__button');
 const scaleControl = form.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
 const range = document.querySelector('.effect-level');
+const uploadFile = document.querySelector('#upload-file');
 
 const body = document.body;
 const MAX_HASHTAG_COUNT = 5;
@@ -111,6 +113,7 @@ const clearForm = () => {
   effectNone.checked = true;
   range.classList.add('hidden');
   window.isSliderInitialized = false;
+  window.destroySlider();
   closeSuccessMessage();
 };
 
@@ -165,6 +168,12 @@ submitButton.addEventListener('click', (evt) => {
     submitButton.disabled = true;
     sendData(showSuccessMessage, showErrorMessage, formData);
   }
+});
+
+//обработчик событий - загрузка фото
+uploadFile.addEventListener('change', (evt) => {
+  evt.preventDefault();
+  imageUpload();
 });
 
 export {showFormWithValidation};
