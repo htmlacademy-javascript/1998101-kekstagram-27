@@ -15,6 +15,7 @@ getData((data) => {
   createMiniatures(data, setupModal);
   initGalleryFilter(data);
 },
+
 () => {
   showAlert('Не удалось загрузить изображения. Попробуйте перезагрузить страницу');
 });

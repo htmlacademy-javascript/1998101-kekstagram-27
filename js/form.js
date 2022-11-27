@@ -109,7 +109,6 @@ const showFormWithValidation = () => {
   uploadFile.addEventListener('change', onOpenForm);
 };
 
-
 // Закрытие окна успешного сообщения
 const closeSuccessMessage = () => {
   successModal.classList.add('hidden');

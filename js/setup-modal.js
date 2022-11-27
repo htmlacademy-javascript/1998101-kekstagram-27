@@ -73,7 +73,6 @@ const setupModal = (url, likes, comments, description) => {
     closeModalButton.addEventListener('click', onCloseModal);
     document.addEventListener('keydown', onEscapeKeydown);
   };
-
   showModal();
 };
 

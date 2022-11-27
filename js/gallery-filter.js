@@ -3,6 +3,7 @@ import {setupModal} from './setup-modal.js';
 import {createMiniatures} from './miniatures.js';
 
 const RANDOM_POST_COUNT = 10;
+
 const postsFilters = document.querySelector('.img-filters');
 const filtersWrapper = postsFilters.querySelector('.img-filters__form');
 let activeFilterElement = document.querySelector('#filter-default');

@@ -11,7 +11,6 @@ const transformStep = 0.25;
 let transformStartValue = 1;
 
 const initScale = () => {
-
   scaleControlValue.value = `${scaleControlDefaultValue}%`;
 
   // Уменьшение масштаба

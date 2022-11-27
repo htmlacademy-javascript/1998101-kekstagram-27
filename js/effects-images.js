@@ -23,7 +23,6 @@ const initFilters = () => {
   let effectCurrentClass;
   const isSliderInitialized = false;
   window.isSliderInitialized = isSliderInitialized;
-
   // По умолчанию выбран эффект «Оригинал».
   effectOriginal.addEventListener('change', (evt) => {
     if (evt.target.checked) {

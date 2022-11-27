@@ -39,7 +39,7 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-// debounce - устраниние дребезга
+// debounce - функция устраниния дребезга
 const debounce = (callback, timeoutDelay = DEFAULT_DEBOUNCE_DELAY) => {
   let timeoutId;
 
