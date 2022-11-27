@@ -10,7 +10,7 @@ const body = document.body;
 const closeFormElement = document.querySelector('.img-upload__overlay');
 const form = document.querySelector('.img-upload__form');
 const uploadPreview = document.querySelector('.img-upload__preview');
-const formInputs = form.querySelectorAll('input, textarea');
+const formInputs = form.querySelectorAll('input:not([type="radio"]), textarea');
 const submitButton = form.querySelector('button[type="submit"]');
 const successModal = document.querySelector('.success');
 const successButton = document.querySelector('.success__button');
@@ -31,7 +31,21 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'p',
   errorTextClass: 'form__error'
-}, true);
+}, false);
+
+const clearForm = () => {
+  formInputs.forEach((input) => {
+    input.value = '';
+  });
+  uploadPreview.className = 'img-upload__preview';
+  uploadPreview.style.filter = '';
+  uploadPreview.style.transform = 'scale(1)';
+  scaleControl.value = '100%';
+  effectNone.checked = true;
+  range.classList.add('hidden');
+  window.isSliderInitialized = false;
+  window.checkSlider();
+};
 
 const showFormWithValidation = () => {
   const getHashTags = (value) => value.trim().split(' ');
@@ -69,52 +83,38 @@ const showFormWithValidation = () => {
     }
   }, `Длина комментария не может быть больше ${MAX_DESCRIPTION_LENGTH} символов.`);
 
-  const onCloseForm = (evt) => {
-    if (evt.target.parentNode.classList.contains('img-upload__wrapper')) {
+  const onKeydownHandler = (evt) => {
+    if (evt.type === 'keydown' && (evt.key === 'Escape') && document.activeElement !== hashTagField && document.activeElement !== descriptionField && errorModal.classList.contains('hidden')) {
+      onCloseForm(evt);
+    }
+  };
+  function onCloseForm(evt) {
+    if ((evt.type === 'click' && evt.target.parentNode.classList.contains('img-upload__wrapper'))) {
       return;
     }
+    clearForm();
     closeFormElement.classList.add('hidden');
     uploadCancel.removeEventListener('click', onCloseForm);
+    document.removeEventListener('keydown', onKeydownHandler);
     body.classList.remove('modal-open');
-  };
-
+  }
   const onOpenForm = () => {
     closeFormElement.classList.remove('hidden');
     uploadCancel.addEventListener('click', onCloseForm);
     body.classList.add('modal-open');
+    // Обработчик нажатия Esc
+    document.addEventListener('keydown', onKeydownHandler);
   };
 
-  form.addEventListener('change', onOpenForm);
+  uploadFile.addEventListener('change', onOpenForm);
 };
 
-// Обработчик нажатия Esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    closeFormElement.classList.add('hidden');
-  }
-});
 
 // Закрытие окна успешного сообщения
 const closeSuccessMessage = () => {
   successModal.classList.add('hidden');
   closeFormElement.classList.add('hidden');
   body.classList.remove('modal-open');
-};
-
-const clearForm = () => {
-  formInputs.forEach((input) => {
-    input.value = '';
-  });
-  uploadPreview.className = 'img-upload__preview';
-  uploadPreview.style.filter = '';
-  uploadPreview.style.transform = 'scale(1)';
-  scaleControl.value = '100%';
-  effectNone.checked = true;
-  range.classList.add('hidden');
-  window.isSliderInitialized = false;
-  window.destroySlider();
-  closeSuccessMessage();
 };
 
 const showSuccessMessage = () => {
@@ -126,6 +126,7 @@ const showSuccessMessage = () => {
   // обработчик на кнопку закрытия и на esc
   successButton.addEventListener('click', (evt) => {
     evt.preventDefault();
+    clearForm();
     closeSuccessMessage();
   });
 

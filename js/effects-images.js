@@ -9,13 +9,15 @@ const effectPhobos = document.querySelector('#effect-phobos');
 const effectHeat = document.querySelector('#effect-heat');
 const effectLevel = document.querySelector('fieldset.img-upload__effect-level');
 
-const destroySlider = () => {
-  effectLevel.classList.add('hidden');
-  effectSliderContainer.noUiSlider.destroy();
-  window.isSliderInitialized = false;
+const checkSlider = () => {
+  if (effectSliderContainer.noUiSlider) {
+    effectLevel.classList.add('hidden');
+    effectSliderContainer.noUiSlider.destroy();
+    window.isSliderInitialized = false;
+  }
 };
 
-window.destroySlider = destroySlider;
+window.checkSlider = checkSlider;
 
 const initFilters = () => {
   let effectCurrentClass;

@@ -14,7 +14,7 @@ getRandomNumber(4, 15);
 //Функция
 const countSameValue = (array, value) => {
   let count = 0;
-  array.forEach((element) => (element === value && count++));
+  array.forEach((element) => (element.toLowerCase() === value.toLowerCase() && count++));
   return count;
 };
 
