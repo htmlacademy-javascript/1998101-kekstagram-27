@@ -1,24 +1,13 @@
 import {getRandomNumber, debounce} from './util.js';
-import {setupModal} from './setupModal.js';
+import {setupModal} from './setup-modal.js';
 import {createMiniatures} from './miniatures.js';
+
+const RANDOM_POST_COUNT = 10;
 
 const postsFilters = document.querySelector('.img-filters');
 const filtersWrapper = postsFilters.querySelector('.img-filters__form');
 let activeFilterElement = document.querySelector('#filter-default');
-
 const activeClass = 'img-filters__button--active';
-const RANDOM_POST_COUNT = 10;
-
-const getRandomPosts = (posts) => {
-  const randomPosts = [];
-  const newArray = posts.slice();
-  for (let i = 0; i < RANDOM_POST_COUNT; i++) {
-    const randomId = getRandomNumber(0, newArray.length - 1);
-    randomPosts.push(newArray[randomId]);
-    newArray.splice(randomId, 1);
-  }
-  return randomPosts;
-};
 
 const compareComments = (postsA, postsB) => {
   const commentsA = postsA.comments.length;
@@ -26,37 +15,24 @@ const compareComments = (postsA, postsB) => {
   return commentsB - commentsA;
 };
 
-const getDiscussedPosts = (posts) => {
-  const discussedPosts = [...posts].sort(compareComments);
-  return discussedPosts;
-};
-
 const showDiscussedPosts = (posts) => {
-  const discussedPosts = getDiscussedPosts(posts);
-
-  const returnedFunction = debounce(() => {
-    createMiniatures(discussedPosts, setupModal);
-  });
-
-  returnedFunction();
+  const discussedPosts = [...posts].sort(compareComments);
+  createMiniatures(discussedPosts, setupModal);
 };
 
 const showRandomPosts = (posts) => {
-  const randomPosts = getRandomPosts(posts);
-
-  const returnedFunction = debounce(() => {
-    createMiniatures(randomPosts, setupModal);
-  });
-
-  returnedFunction();
+  const randomPosts = [];
+  const newArray = posts.slice();
+  for (let i = 0; i < RANDOM_POST_COUNT; i++) {
+    const randomId = getRandomNumber(0, newArray.length - 1);
+    randomPosts.push(newArray[randomId]);
+    newArray.splice(randomId, 1);
+  }
+  createMiniatures(randomPosts, setupModal);
 };
 
 const showInitialPosts = (posts) => {
-  const returnedFunction = debounce(() => {
-    createMiniatures(posts, setupModal);
-  });
-
-  returnedFunction();
+  createMiniatures(posts, setupModal);
 };
 
 const initGalleryFilter = (data) => {
@@ -64,7 +40,7 @@ const initGalleryFilter = (data) => {
 
   postsFilters.classList.remove('img-filters--inactive');
 
-  filtersWrapper.addEventListener('click', (evt) => {
+  filtersWrapper.addEventListener('click', debounce((evt) => {
     const target = evt.target;
     if (!target.classList.contains('img-filters__button')) {
       return;
@@ -84,7 +60,7 @@ const initGalleryFilter = (data) => {
     } else {
       showInitialPosts(initialPosts);
     }
-  });
+  }));
 };
 
 export {initGalleryFilter};

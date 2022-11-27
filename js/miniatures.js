@@ -9,7 +9,6 @@ const createMiniatures = (photoObjects, showModal) => {
   }
   photoObjects.forEach((({url, likes, comments, description}) => {
     const commentsLength = comments.length;
-
     const miniature = templateMiniatures.cloneNode(true);
     miniature.querySelector('.picture__img').src = url;
     miniature.querySelector('.picture__likes').textContent = likes;

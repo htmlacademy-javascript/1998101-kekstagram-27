@@ -1,22 +1,20 @@
-// Код, который позволяет пользователю редактировать масштаб изображения.
+const SCALESTEP = 25;
+const SCALEMIN = 25;
+const SCALEMAX = 100;
 const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
 scaleControlBigger.disabled = true;
 const scaleControlValue = document.querySelector('.scale__control--value');
 const uploadPhoto = document.querySelector('.img-upload__preview');
 let scaleControlDefaultValue = 100;
-const SCALESTEP = 25;
-const SCALEMIN = 25;
-const SCALEMAX = 100;
 const transformStep = 0.25;
 let transformStartValue = 1;
 
 const initScale = () => {
-
   scaleControlValue.value = `${scaleControlDefaultValue}%`;
 
   // Уменьшение масштаба
-  const makePhotoSmaller = (evt) => {
+  const onMakePhotoSmaller = (evt) => {
     evt.preventDefault();
     scaleControlDefaultValue -= SCALESTEP;
     scaleControlValue.value = `${scaleControlDefaultValue}%`;
@@ -49,7 +47,7 @@ const initScale = () => {
     }
   };
 
-  scaleControlSmaller.addEventListener('click', makePhotoSmaller);
+  scaleControlSmaller.addEventListener('click', onMakePhotoSmaller);
   scaleControlBigger.addEventListener('click', makePhotoBigger);
 };
 

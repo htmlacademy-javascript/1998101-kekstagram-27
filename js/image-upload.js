@@ -1,9 +1,9 @@
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 const fileUpload = document.querySelector('input[type=file]');
+const miniaturesEffects = document.querySelectorAll('.effects__preview');
 const imagePreview = document.querySelector('.img-upload__preview');
 const uploadPreview = imagePreview.querySelector('img');
-const miniaturesEffects = document.querySelectorAll('.effects__preview');
 
-const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const imageUpload = () => {
   const file = fileUpload.files[0];

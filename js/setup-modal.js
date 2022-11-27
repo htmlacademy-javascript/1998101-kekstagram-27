@@ -26,15 +26,16 @@ const setupModal = (url, likes, comments, description) => {
 
     commentsArr.forEach(({avatar, message, name}) => {
       const comment = templateComment.cloneNode(true);
-      comment.querySelector('.social__picture').src = avatar;
+      const socialPicture = comment.querySelector('.social__picture');
+      socialPicture.src = avatar;
       comment.querySelector('.social__text').textContent = message;
-      comment.querySelector('.social__picture').alt = name;
+      socialPicture.alt = name;
       commentsContainer.appendChild(comment);
     });
     socialComments.appendChild(commentsContainer);
   };
 
-  const loadMoreComments = () => {
+  const onLoadMoreComments = () => {
     const commentsToShow = comments.slice(+currentCommentElement.textContent, +currentCommentElement.textContent + MAX_COMMENTS_COUNT);
     renderComments(commentsToShow);
     currentCommentElement.textContent = +currentCommentElement.textContent + commentsToShow.length;
@@ -51,28 +52,27 @@ const setupModal = (url, likes, comments, description) => {
     currentCommentElement.textContent = String(MAX_COMMENTS_COUNT);
     loadMoreButton.classList.remove('hidden');
     renderComments(comments.slice(0, MAX_COMMENTS_COUNT));
-    loadMoreButton.addEventListener('click', loadMoreComments);
+    loadMoreButton.addEventListener('click', onLoadMoreComments);
   }
 
   bigPicture.querySelector('.big-picture__img img').src = url;
   bigPicture.querySelector('.likes-count').textContent = likes;
   bigPicture.querySelector('.social__caption').textContent = description;
 
-  const closeModal = () => {
+  const onCloseModal = () => {
     bigPicture.classList.add('hidden');
     body.classList.remove('modal-open');
-    closeModalButton.removeEventListener('click', closeModal);
+    closeModalButton.removeEventListener('click', onCloseModal);
     document.removeEventListener('keydown', onEscapeKeydown);
-    loadMoreButton.removeEventListener('click', loadMoreComments);
+    loadMoreButton.removeEventListener('click', onLoadMoreComments);
   };
 
   const showModal = () => {
     bigPicture.classList.remove('hidden');
     body.classList.add('modal-open');
-    closeModalButton.addEventListener('click', closeModal);
+    closeModalButton.addEventListener('click', onCloseModal);
     document.addEventListener('keydown', onEscapeKeydown);
   };
-
   showModal();
 };
 

@@ -1,11 +1,16 @@
 import {countSameValue} from './util.js';
 import {sendData} from './api.js';
-import {imageUpload} from './imageUpload.js';
+import {imageUpload} from './image-upload.js';
 
+const MAX_HASHTAG_COUNT = 5;
+const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const body = document.body;
 const closeFormElement = document.querySelector('.img-upload__overlay');
 const form = document.querySelector('.img-upload__form');
 const uploadPreview = document.querySelector('.img-upload__preview');
-const formInputs = form.querySelectorAll('input, textarea');
+const formInputs = form.querySelectorAll('input:not([type="radio"]), textarea');
 const submitButton = form.querySelector('button[type="submit"]');
 const successModal = document.querySelector('.success');
 const successButton = document.querySelector('.success__button');
@@ -15,11 +20,9 @@ const scaleControl = form.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
 const range = document.querySelector('.effect-level');
 const uploadFile = document.querySelector('#upload-file');
-
-const body = document.body;
-const MAX_HASHTAG_COUNT = 5;
-const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
-const MAX_DESCRIPTION_LENGTH = 140;
+const hashTagField = form.querySelector('.text__hashtags');
+const descriptionField = form.querySelector('.text__description');
+const uploadCancel = document.querySelector('.img-upload__cancel');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -28,12 +31,23 @@ const pristine = new Pristine(form, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'p',
   errorTextClass: 'form__error'
-}, true);
+}, false);
+
+const clearForm = () => {
+  formInputs.forEach((input) => {
+    input.value = '';
+  });
+  uploadPreview.className = 'img-upload__preview';
+  uploadPreview.style.filter = '';
+  uploadPreview.style.transform = 'scale(1)';
+  scaleControl.value = '100%';
+  effectNone.checked = true;
+  range.classList.add('hidden');
+  window.isSliderInitialized = false;
+  window.checkSlider();
+};
 
 const showFormWithValidation = () => {
-  const hashTagField = form.querySelector('.text__hashtags');
-  const descriptionField = form.querySelector('.text__description');
-
   const getHashTags = (value) => value.trim().split(' ');
 
   // Валидация по формату хештега
@@ -69,52 +83,37 @@ const showFormWithValidation = () => {
     }
   }, `Длина комментария не может быть больше ${MAX_DESCRIPTION_LENGTH} символов.`);
 
-  const closeForm = (evt) => {
-    if (evt.target.parentNode.classList.contains('img-upload__wrapper')) {
+  const onKeydownHandler = (evt) => {
+    if (evt.type === 'keydown' && (evt.key === 'Escape') && document.activeElement !== hashTagField && document.activeElement !== descriptionField && errorModal.classList.contains('hidden')) {
+      onCloseForm(evt);
+    }
+  };
+  function onCloseForm(evt) {
+    if ((evt.type === 'click' && evt.target.parentNode.classList.contains('img-upload__wrapper'))) {
       return;
     }
-    document.querySelector('.img-upload__overlay').classList.add('hidden');
-    document.querySelector('.img-upload__cancel').removeEventListener('click', closeForm);
-    body.classList.remove('modal-open');
-  };
-
-  const openForm = () => {
-    document.querySelector('.img-upload__overlay').classList.remove('hidden');
-    document.querySelector('.img-upload__cancel').addEventListener('click', closeForm);
-    body.classList.add('modal-open');
-  };
-
-  form.addEventListener('change', openForm);
-};
-
-// Обработчик нажатия Esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
+    clearForm();
     closeFormElement.classList.add('hidden');
+    uploadCancel.removeEventListener('click', onCloseForm);
+    document.removeEventListener('keydown', onKeydownHandler);
+    body.classList.remove('modal-open');
   }
-});
+  const onOpenForm = () => {
+    closeFormElement.classList.remove('hidden');
+    uploadCancel.addEventListener('click', onCloseForm);
+    body.classList.add('modal-open');
+    // Обработчик нажатия Esc
+    document.addEventListener('keydown', onKeydownHandler);
+  };
+
+  uploadFile.addEventListener('change', onOpenForm);
+};
 
 // Закрытие окна успешного сообщения
 const closeSuccessMessage = () => {
   successModal.classList.add('hidden');
   closeFormElement.classList.add('hidden');
   body.classList.remove('modal-open');
-};
-
-const clearForm = () => {
-  formInputs.forEach((input) => {
-    input.value = '';
-  });
-  uploadPreview.className = 'img-upload__preview';
-  uploadPreview.style.filter = '';
-  uploadPreview.style.transform = 'scale(1)';
-  scaleControl.value = '100%';
-  effectNone.checked = true;
-  range.classList.add('hidden');
-  window.isSliderInitialized = false;
-  window.destroySlider();
-  closeSuccessMessage();
 };
 
 const showSuccessMessage = () => {
@@ -126,6 +125,7 @@ const showSuccessMessage = () => {
   // обработчик на кнопку закрытия и на esc
   successButton.addEventListener('click', (evt) => {
     evt.preventDefault();
+    clearForm();
     closeSuccessMessage();
   });
 
