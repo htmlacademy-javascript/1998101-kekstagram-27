@@ -3,6 +3,10 @@ const templateMiniatures = document.querySelector('#picture').content.querySelec
 const similarListMiniature = document.createDocumentFragment();
 
 const createMiniatures = (photoObjects, showModal) => {
+  const picturesItems = pictures.querySelectorAll('.picture');
+  if (picturesItems.length) {
+    picturesItems.forEach((item) => item.remove());
+  }
   photoObjects.forEach((({url, likes, comments, description}) => {
     const commentsLength = comments.length;
 

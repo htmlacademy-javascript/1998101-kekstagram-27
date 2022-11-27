@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const DEFAULT_DEBOUNCE_DELAY = 500;
 
 // Функция, возвращающая случайное целое число из переданного диапазона включительно
 const getRandomNumber = (min, max) => {
@@ -9,11 +10,6 @@ const getRandomNumber = (min, max) => {
 };
 
 getRandomNumber(4, 15);
-
-// Функция для проверки максимальной длины строки
-const checkMaxStringLength = (string, maxLength) => string.length <= maxLength;
-
-checkMaxStringLength('строка', 5);
 
 //Функция
 const countSameValue = (array, value) => {
@@ -43,4 +39,16 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomNumber, countSameValue, checkMaxStringLength, showAlert};
+// debounce - устраниние дребезга
+const debounce = (callback, timeoutDelay = DEFAULT_DEBOUNCE_DELAY) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const getRandomElement = (array) => array[getRandomNumber(0, array.length - 1)];
+
+export {getRandomNumber, countSameValue, showAlert, debounce, getRandomElement};
